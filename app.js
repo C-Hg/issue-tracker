@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 //app config
 app.use(helmet.xssFilter()); 
@@ -10,6 +11,10 @@ app.use(helmet.xssFilter());
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(cors({ optionSuccessStatus: 200 }));
+
+//public assets
+app.use('/public', express.static(process.cwd() + '/public'));
 
 //Mongoose setup
 const mongoose = require('mongoose');
