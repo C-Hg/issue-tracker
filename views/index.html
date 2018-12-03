@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Issue Tracker</title>
+    <meta name="description">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <header>
+        <h1>
+            Issue Tracker
+        </h1>
+    </header>
+
+    <div id='testui'>
+        <h2 style="text-align: left">API Tests:</h2>
+        <h3>Submit an issue on the project of your choice</h3>
+        <form id="submitIssue" class="border">
+            <input id="f0project_name" type="text" name="project_name" placeholder="*Project" required>
+            <input id="f0issue_title" type="text" name="issue_title" placeholder="*Title" style="width: 100px" required=''><br>
+            <textarea id="f0issue_text" type="text" name="issue_text" placeholder="*Text" style="width: 100px" required=''></textarea><br>
+            <input id="f0created_by" type="text" name="created_by" placeholder="*Created by" style="width: 100px" required=''><br>
+            <input id="f0assigned_to" type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
+            <input id="f0status_text" type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
+            <button type="submit">Create new issue</button>
+        </form><br>
+        <h3>Update issue on <i>apitest</i> (Change any or all to update issue on the _id supplied)</h3>
+        <form id="UpdateIssue" class="border">
+            <input type="text" name="_id" placeholder="*_id" style="width: 100px" required=''><br>
+            <input type="text" name="issue_title" placeholder="(opt)Title" style="width: 100px"><br>
+            <textarea type="text" name="issue_text" placeholder="(opt)Text" style="width: 100px"></textarea><br>
+            <input type="text" name="created_by" placeholder="(opt)Created by" style="width: 100px"><br>
+            <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
+            <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
+            <label><input type="checkbox" name="open" value=false> Check to close issue</label><br>
+            <button type="submit">Submit Issue</button>
+        </form><br>
+        <h3>Delete issue on <i>apitest</i></h3>
+        <form id="deleteIssue" class="border">
+            <input type="text" name="_id" placeholder="_id" style="width: 100px" required=''><br>
+            <button type="submit">Delete Issue</button>
+        </form>
+        <code id='jsonResult'></code>
+    </div>
+
+    <script>
+        window.onload = function () {
+
+            //handles the first form : submit new issue
+            document.forms[0].addEventListener("submit", function (e) {
+                e.preventDefault();               
+                let data = {
+                    issue_title: f0issue_title.value,
+                    issue_text: f0issue_text.value,
+                    created_by: f0created_by.value,
+                    assigned_to: f0assigned_to.value,
+                    status_text: f0status_text.value
+                };
+                let project = f0project_name.value;
+                let query = "api/issues/" + project;
+                let req = new XMLHttpRequest();
+                req.open("POST", query, true);
+                req.setRequestHeader('Content-Type','application/json');
+                req.send(JSON.stringify(data));
+                req.onload = function () {
+                    let json = JSON.parse(req.responseText);
+                    document.getElementById('jsonResult').innerHTML = "Raw JSON response : " + req.responseText;
+                };
+            });
+        }
+
+    </script>
+</body>
+
+</html>

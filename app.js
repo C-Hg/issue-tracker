@@ -1,12 +1,15 @@
 const express = require('express');
 const app = express();
+const helmet = require('helmet');
+const bodyParser = require('body-parser');
 
-//enables CORS (facultative)
-var cors = require('cors');
-app.use(cors({ optionSuccessStatus: 200 }));
+//app config
+app.use(helmet.xssFilter()); 
 
 // serving public files
 app.use('/public', express.static(process.cwd() + '/public'));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 //Mongoose setup
 const mongoose = require('mongoose');
@@ -23,6 +26,9 @@ db.once('open', () => {
    });
 });
 
+//issue-tracker routing
+const issue_tracker_routes = require('./routes/issues.route');
+app.use('/api/issues', issue_tracker_routes);
 
 //home routing
 app.get("/", function (req, res) {

@@ -4,7 +4,8 @@
   "description": "2nd InfoSec and Quality Assurance FreeCodeCamp project",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --exit"
+    "test": "mocha --exit",
+    "start": "node app.js"
   },
   "author": "Camille HAGENBOURGER",
   "license": "MIT",
