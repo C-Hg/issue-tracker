@@ -17,26 +17,27 @@
     </header>
 
     <div id='testui'>
-        <h2 style="text-align: left">API Tests:</h2>
+        <div id="result"></div>
         <h3>Submit an issue on the project of your choice</h3>
         <form id="submitIssue" class="border">
             <input id="f0project_name" type="text" name="project_name" placeholder="*Project" required>
-            <input id="f0issue_title" type="text" name="issue_title" placeholder="*Title" style="width: 100px" required=''><br>
-            <textarea id="f0issue_text" type="text" name="issue_text" placeholder="*Text" style="width: 100px" required=''></textarea><br>
-            <input id="f0created_by" type="text" name="created_by" placeholder="*Created by" style="width: 100px" required=''><br>
+            <input id="f0issue_title" type="text" name="issue_title" placeholder="*Title" style="width: 100px" required><br>
+            <textarea id="f0issue_text" type="text" name="issue_text" placeholder="*Text" style="width: 100px" required></textarea><br>
+            <input id="f0created_by" type="text" name="created_by" placeholder="*Created by" style="width: 100px" required><br>
             <input id="f0assigned_to" type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
             <input id="f0status_text" type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
             <button type="submit">Create new issue</button>
         </form><br>
-        <h3>Update issue on <i>apitest</i> (Change any or all to update issue on the _id supplied)</h3>
+        <h3>Update an issue based on its id</h3>
         <form id="UpdateIssue" class="border">
-            <input type="text" name="_id" placeholder="*_id" style="width: 100px" required=''><br>
-            <input type="text" name="issue_title" placeholder="(opt)Title" style="width: 100px"><br>
-            <textarea type="text" name="issue_text" placeholder="(opt)Text" style="width: 100px"></textarea><br>
-            <input type="text" name="created_by" placeholder="(opt)Created by" style="width: 100px"><br>
-            <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
-            <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
-            <label><input type="checkbox" name="open" value=false> Check to close issue</label><br>
+            <input id="f1project_name" type="text" name="project_name" placeholder="*Project" required>
+            <input id="f1id" type="text" name="_id" placeholder="*_id" style="width: 100px" required=><br>
+            <input id="f1issue_title" type="text" name="issue_title" placeholder="(opt)Title" style="width: 100px"><br>
+            <textarea id="f1issue_text" type="text" name="issue_text" placeholder="(opt)Text" style="width: 100px"></textarea><br>
+            <input id="f1created_by" type="text" name="created_by" placeholder="(opt)Created by" style="width: 100px"><br>
+            <input id="f1assigned_to" type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
+            <input id="f1status_text" type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
+            <label><input id="f1close_issue" type="checkbox" name="closeIssue"> Check to close issue</label><br>
             <button type="submit">Submit Issue</button>
         </form><br>
         <h3>Delete issue on <i>apitest</i></h3>
@@ -68,6 +69,32 @@
                 req.send(JSON.stringify(data));
                 req.onload = function () {
                     let json = JSON.parse(req.responseText);
+                    document.getElementById('result').innerHTML = json.string;
+                    document.getElementById('jsonResult').innerHTML = "Raw JSON response : " + req.responseText;
+                };
+            });
+
+            //handles the seconde form : update an issue
+            document.forms[1].addEventListener("submit", function (e) {
+                e.preventDefault();               
+                let data = {
+                    id: f1id.value,
+                    issue_title: f1issue_title.value,
+                    issue_text: f1issue_text.value,
+                    created_by: f1created_by.value,
+                    assigned_to: f1assigned_to.value,
+                    status_text: f1status_text.value,
+                    close_issue: f1close_issue.checked
+                };
+                let project = f1project_name.value;
+                let query = "api/issues/" + project;
+                let req = new XMLHttpRequest();
+                req.open("PUT", query, true);
+                req.setRequestHeader('Content-Type','application/json');
+                req.send(JSON.stringify(data));
+                req.onload = function () {
+                    let json = JSON.parse(req.responseText);
+                    document.getElementById('result').innerHTML = json.string;
                     document.getElementById('jsonResult').innerHTML = "Raw JSON response : " + req.responseText;
                 };
             });

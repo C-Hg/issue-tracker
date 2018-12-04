@@ -4,7 +4,7 @@ var assert = chai.assert;
 
 chai.use(chaiHttp);
 
-suite('Issue-tracker api', function () {
+suite('Homepage', function () {
     test('Homepage responds', function (done) {
         chai.request('http://localhost:3000')
             .get('/')
@@ -16,9 +16,9 @@ suite('Issue-tracker api', function () {
     })
 })
 
-suite('Issue creation on "test" project', function () {
+suite('Issue creation on "Apitest" project', function () {
     suite('Every fields filled in', function () {
-        test('response includes project_id, issue title, text, creator, assignee, status_text, creation Date, updated Date and open status; excludes __v and project_id', function (done) {
+        test('response includes issue id, title, text, creator, assignee, status_text, creation Date, updated Date and open status; excludes __v and project_id', function (done) {
             chai.request('http://localhost:3000')
                 .post('/api/issues/Apitest')
                 .type('form')
@@ -34,6 +34,7 @@ suite('Issue creation on "test" project', function () {
                     let response = JSON.parse(res.text);
                     assert.notProperty(response, 'project', "should not mention the project id");
                     assert.notProperty(response, '__v', "should not mention the __v");
+                    assert.property(response, '_id', "should mention the issue id");
                     assert.propertyVal(response, 'title', 'Test issue', "should mention the issue title")
                     assert.propertyVal(response, 'text', 'Test text', "should mention the issue text");
                     assert.propertyVal(response, 'creator', 'C-Hg', "should mention the issue creator");
@@ -42,12 +43,13 @@ suite('Issue creation on "test" project', function () {
                     assert.property(response, 'created_on', "should mention the creation date");
                     assert.property(response, 'updated_on', "should mention the updating date");
                     assert.propertyVal(response, 'open', true, "should mention the open status");
+                    assert.propertyVal(response, 'string', "New issue \"Test issue\" for project \"Apitest\" successfully created.", "should send the successful string response");
                     done();
                 })
         })
     })
     suite('Only required fields filled in', function () {
-        test('response includes issue title, text, creator, assignee, status_text, creation Date, updated Date and open status; excludes __v and project_id', function (done) {
+        test('response includes issue id, title, text, creator, assignee, status_text, creation Date, updated Date and open status; excludes __v and project_id', function (done) {
             chai.request('http://localhost:3000')
                 .post('/api/issues/Apitest')
                 .type('form')
@@ -61,6 +63,7 @@ suite('Issue creation on "test" project', function () {
                     let response = JSON.parse(res.text);
                     assert.notProperty(response, 'project', "should not mention the project id");
                     assert.notProperty(response, '__v', "should not mention the __v");
+                    assert.property(response, '_id', "should mention the issue id");
                     assert.propertyVal(response, 'title', 'Test issue', "should mention the issue title")
                     assert.propertyVal(response, 'text', 'Test text', "should mention the issue text");
                     assert.propertyVal(response, 'creator', 'C-Hg', "should mention the issue creator");
@@ -69,6 +72,7 @@ suite('Issue creation on "test" project', function () {
                     assert.property(response, 'created_on', "should mention the creation date");
                     assert.property(response, 'updated_on', "should mention the updating date");
                     assert.propertyVal(response, 'open', true, "should mention the open status");
+                    assert.propertyVal(response, 'string', "New issue \"Test issue\" for project \"Apitest\" successfully created.", "should send the successful string response");
                     done();
                 })
         })
@@ -85,7 +89,7 @@ suite('Issue creation on "test" project', function () {
                 .end(function (err, res) {
                     if (err) throw err;
                     let response = JSON.parse(res.text);
-                    assert.propertyVal(response, 'error', 'One or several required parameters were not transmitted, please use the form', "should return an error message")
+                    assert.propertyVal(response, 'string', 'One or several required parameters were not transmitted, please use the form.', "should return an error message")
                     done();
                 })
         })
@@ -101,7 +105,7 @@ suite('Issue creation on "test" project', function () {
                 .end(function (err, res) {
                     if (err) throw err;
                     let response = JSON.parse(res.text);
-                    assert.propertyVal(response, 'error', 'One or several required parameters were not transmitted, please use the form', "should return an error message")
+                    assert.propertyVal(response, 'string', 'One or several required parameters were not transmitted, please use the form.', "should return an error message")
                     done();
                 })
         })
@@ -117,7 +121,7 @@ suite('Issue creation on "test" project', function () {
                 .end(function (err, res) {
                     if (err) throw err;
                     let response = JSON.parse(res.text);
-                    assert.propertyVal(response, 'error', 'One or several required parameters were not transmitted, please use the form', "should return an error message")
+                    assert.propertyVal(response, 'string', 'One or several required parameters were not transmitted, please use the form.', "should return an error message")
                     done();
                 })
         })
