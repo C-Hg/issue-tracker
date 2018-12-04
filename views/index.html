@@ -42,7 +42,8 @@
         </form><br>
         <h3>Delete issue on <i>apitest</i></h3>
         <form id="deleteIssue" class="border">
-            <input type="text" name="_id" placeholder="_id" style="width: 100px" required=''><br>
+            <input id="f2project_name" type="text" name="project_name" placeholder="*Project" required>
+            <input id="f2id" type="text" name="_id" placeholder="_id" style="width: 100px" required=''><br>
             <button type="submit">Delete Issue</button>
         </form>
         <code id='jsonResult'></code>
@@ -90,6 +91,23 @@
                 let query = "api/issues/" + project;
                 let req = new XMLHttpRequest();
                 req.open("PUT", query, true);
+                req.setRequestHeader('Content-Type','application/json');
+                req.send(JSON.stringify(data));
+                req.onload = function () {
+                    let json = JSON.parse(req.responseText);
+                    document.getElementById('result').innerHTML = json.string;
+                    document.getElementById('jsonResult').innerHTML = "Raw JSON response : " + req.responseText;
+                };
+            });
+
+            //handles the third form : delete an issue
+            document.forms[2].addEventListener("submit", function (e) {
+                e.preventDefault();               
+                let data = { id: f2id.value };
+                let project = f2project_name.value;
+                let query = "api/issues/" + project;
+                let req = new XMLHttpRequest();
+                req.open("DELETE", query, true);
                 req.setRequestHeader('Content-Type','application/json');
                 req.send(JSON.stringify(data));
                 req.onload = function () {

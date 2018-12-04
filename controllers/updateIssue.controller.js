@@ -1,5 +1,5 @@
-const read_functions = require('./database_functions/read.functions');
 const update_functions = require('./database_functions/update.functions');
+const common = require('./common/issue.common');
 
 exports.update_issue = async function (req, res) {
     //verify that required parameters were transmitted, error 404 if trying to post with no project specified
@@ -11,21 +11,10 @@ exports.update_issue = async function (req, res) {
 
     //verify that project and issue exist
     //updates the issue if an issue_id matching the project is found
-    let project = await read_functions.retrieve_project_by_name(req.params.project);
-    if(!project){
-        res.json({'string': 'This project does not exist.'})
-        return;
-     }
-    
-    let issue = await read_functions.retrieve_issue_by_id(req.body.id);
-     if(!issue){
-        res.json({'string': 'This issue does not exist.'});
-        return;
-    }
-
-    let issueAndProjectAreRelated = checkProjectRelation(project._id, issue.project);
-    if(!issueAndProjectAreRelated) {
-        res.json({'string': 'This issue is not related to the project mentioned'});
+    //returns an object(true object with string response if error, or mongodb object without string if successful)
+    let issue = await common.checkProjectAndIssue(req.params.project, req.body.id)
+    if(issue.string) {
+        res.json(issue);
         return;
     }
 
@@ -54,9 +43,3 @@ function checkParams (params) {
     return true;
 }
 
-function checkProjectRelation (projectId, IdOfparentProject) {
-    if (projectId.toString() === IdOfparentProject.toString()) {
-        return true;
-    }
-    return false;
-}

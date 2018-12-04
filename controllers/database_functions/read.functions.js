@@ -22,8 +22,3 @@ exports.retrieve_issue_by_id = async function (id) {
         if (e) console.log("Error while searching issue by id");
     }
 }
-
-exports.check_project_relation = async function (projectId, issueId) {
-    let parentProject = await Project.find
-
-}
