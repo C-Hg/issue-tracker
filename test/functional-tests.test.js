@@ -18,7 +18,7 @@ suite('Issue-tracker api', function () {
 
 suite('Issue creation on "test" project', function () {
     suite('Every fields filled in', function () {
-        test('response includes project_id, issue title, text, creator, assignee, status_text, creation Date, updated Date and status', function (done) {
+        test('response includes project_id, issue title, text, creator, assignee, status_text, creation Date, updated Date and open status; excludes __v and project_id', function (done) {
             chai.request('http://localhost:3000')
                 .post('/api/issues/Apitest')
                 .type('form')
@@ -32,7 +32,8 @@ suite('Issue creation on "test" project', function () {
                 .end(function (err, res) {
                     if (err) throw err;
                     let response = JSON.parse(res.text);
-                    assert.property(response, 'project', "should mention the project id");
+                    assert.notProperty(response, 'project', "should not mention the project id");
+                    assert.notProperty(response, '__v', "should not mention the __v");
                     assert.propertyVal(response, 'title', 'Test issue', "should mention the issue title")
                     assert.propertyVal(response, 'text', 'Test text', "should mention the issue text");
                     assert.propertyVal(response, 'creator', 'C-Hg', "should mention the issue creator");
@@ -41,7 +42,97 @@ suite('Issue creation on "test" project', function () {
                     assert.property(response, 'created_on', "should mention the creation date");
                     assert.property(response, 'updated_on', "should mention the updating date");
                     assert.propertyVal(response, 'open', true, "should mention the open status");
+                    done();
+                })
+        })
+    })
+    suite('Only required fields filled in', function () {
+        test('response includes issue title, text, creator, assignee, status_text, creation Date, updated Date and open status; excludes __v and project_id', function (done) {
+            chai.request('http://localhost:3000')
+                .post('/api/issues/Apitest')
+                .type('form')
+                .send({
+                    issue_title: 'Test issue',
+                    issue_text: 'Test text',
+                    created_by: 'C-Hg'
+                })
+                .end(function (err, res) {
+                    if (err) throw err;
+                    let response = JSON.parse(res.text);
+                    assert.notProperty(response, 'project', "should not mention the project id");
+                    assert.notProperty(response, '__v', "should not mention the __v");
+                    assert.propertyVal(response, 'title', 'Test issue', "should mention the issue title")
+                    assert.propertyVal(response, 'text', 'Test text', "should mention the issue text");
+                    assert.propertyVal(response, 'creator', 'C-Hg', "should mention the issue creator");
+                    assert.propertyVal(response, 'assigned_to', '', "should mention the assignee");
+                    assert.propertyVal(response, 'status_text', '', "should mention the status text");
+                    assert.property(response, 'created_on', "should mention the creation date");
+                    assert.property(response, 'updated_on', "should mention the updating date");
+                    assert.propertyVal(response, 'open', true, "should mention the open status");
+                    done();
+                })
+        })
+    })
+    suite('Missing required field', function () {
+        test('Missing issue title returns error message', function (done) {
+            chai.request('http://localhost:3000')
+                .post('/api/issues/Apitest')
+                .type('form')
+                .send({
+                    issue_text: 'Test text',
+                    created_by: 'C-Hg'
+                })
+                .end(function (err, res) {
+                    if (err) throw err;
+                    let response = JSON.parse(res.text);
+                    assert.propertyVal(response, 'error', 'One or several required parameters were not transmitted, please use the form', "should return an error message")
+                    done();
+                })
+        })
 
+        test('Missing issue text returns error message', function (done) {
+            chai.request('http://localhost:3000')
+                .post('/api/issues/Apitest')
+                .type('form')
+                .send({
+                    issue_title: 'Test issue',
+                    created_by: 'C-Hg'
+                })
+                .end(function (err, res) {
+                    if (err) throw err;
+                    let response = JSON.parse(res.text);
+                    assert.propertyVal(response, 'error', 'One or several required parameters were not transmitted, please use the form', "should return an error message")
+                    done();
+                })
+        })
+
+        test('Missing creator returns error message', function (done) {
+            chai.request('http://localhost:3000')
+                .post('/api/issues/Apitest')
+                .type('form')
+                .send({
+                    issue_title: 'Test issue',
+                    issue_text: 'Test text',
+                })
+                .end(function (err, res) {
+                    if (err) throw err;
+                    let response = JSON.parse(res.text);
+                    assert.propertyVal(response, 'error', 'One or several required parameters were not transmitted, please use the form', "should return an error message")
+                    done();
+                })
+        })
+        test('Missing project name returns error 404', function (done) {
+            chai.request('http://localhost:3000')
+                .post('/api/issues/')
+                .type('form')
+                .send({
+                    issue_title: 'Test issue',
+                    issue_text: 'Test text',
+                    created_by: 'C-Hg'
+                })
+                .end(function (err, res) {
+                    if (err) throw err;
+                    assert.equal(res.status, 404, "should return an error message")
                     done();
                 })
         })
