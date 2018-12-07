@@ -4,7 +4,7 @@ var assert = chai.assert;
 
 chai.use(chaiHttp);
 
-suite('Issue deletion on "Apitest" project', function(){
+suite('Issue deletion on "Apitest" project', function () {
     let validId = "";
     before(function () {
         //fetches a new valid issue id
@@ -22,34 +22,49 @@ suite('Issue deletion on "Apitest" project', function(){
             });
     })
 
-    suite('Deletes successfully with a valid id', function(){
-        test('deletion of the issue', function(done){
+    suite('Deletes successfully with a valid id', function () {
+        //get successful deletion answer, then double check by trying to modify it
+        test('deletion of the issue successful', function (done) {
             chai.request('http://localhost:3000')
-            .delete('/api/issues/Apitest')
-            .type('form')
-            .send({
-                id: validId
-            })
-            .end(function (err, res) {
-                let response = JSON.parse(res.text);
-                assert.propertyVal(response, 'string', 'Issue successfully deleted.', "should respond that the issue has been deleted");
-                done();
-            });
+                .delete('/api/issues/Apitest')
+                .type('form')
+                .send({
+                    id: validId
+                })
+                .end(function (err, res) {
+                    let response = JSON.parse(res.text);
+                    assert.propertyVal(response, 'string', 'Issue successfully deleted.', "should respond that the issue has been deleted");
+                    done();
+                });
+        })
+        test('the error does not exist anymore when trying to modify it', function (done) {
+            chai.request('http://localhost:3000')
+                .put('/api/issues/Apitest')
+                .type('form')
+                .send({
+                    id: validId,
+                    issue_text: 'Replaced Test text',
+                })
+                .end(function (err, res) {
+                    let response = JSON.parse(res.text);
+                    assert.propertyVal(response, 'string', 'This issue does not exist.', "should respond that the project does not exist");
+                    done();
+                })
         })
     })
     suite('Rejection when wrong or no data is provided.', function () {
-        test('the project does not exist', function(done){
+        test('the project does not exist', function (done) {
             chai.request('http://localhost:3000')
-            .delete('/api/issues/FarTooLongAndMeaninglessName')
-            .type('form')
-            .send({
-                id: validId,
-            })
-            .end(function (err, res) {
-                let response = JSON.parse(res.text);
-                assert.propertyVal(response, 'string', 'This project does not exist.', "should respond that the project does not exist");
-                done();
-            })
+                .delete('/api/issues/FarTooLongAndMeaninglessName')
+                .type('form')
+                .send({
+                    id: validId,
+                })
+                .end(function (err, res) {
+                    let response = JSON.parse(res.text);
+                    assert.propertyVal(response, 'string', 'This project does not exist.', "should respond that the project does not exist");
+                    done();
+                })
         })
         test('the id does not exist', function (done) {
             chai.request('http://localhost:3000')
@@ -81,7 +96,7 @@ suite('Issue deletion on "Apitest" project', function(){
 
         test('missing project name returns error 404', function (done) {
             chai.request('http://localhost:3000')
-                .delet('/api/issues/')
+                .delete('/api/issues/')
                 .type('form')
                 .send({
                     _id: validId

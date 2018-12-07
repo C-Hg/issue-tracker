@@ -7,6 +7,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./public/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c:300" type="text/css">
 </head>
 
 <body>
@@ -15,35 +17,35 @@
             Issue Tracker
         </h1>
     </header>
-
+    <h2>Create, update and delete issues on the project of your choice.</h2>
     <div id='testui'>
         <div id="result"></div>
-        <h3>Submit an issue on the project of your choice</h3>
+        <h3>Submit a new issue</h3>
         <form id="submitIssue" class="border">
-            <input id="f0project_name" type="text" name="project_name" placeholder="*Project" required>
-            <input id="f0issue_title" type="text" name="issue_title" placeholder="*Title" style="width: 100px" required><br>
-            <textarea id="f0issue_text" type="text" name="issue_text" placeholder="*Text" style="width: 100px" required></textarea><br>
-            <input id="f0created_by" type="text" name="created_by" placeholder="*Created by" style="width: 100px" required><br>
-            <input id="f0assigned_to" type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
-            <input id="f0status_text" type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
-            <button type="submit">Create new issue</button>
+            <input id="f0project_name" type="text" name="project_name" placeholder="*Project" required><br>
+            <input id="f0issue_title" type="text" name="issue_title" placeholder="*Title" required><br>
+            <input id="f0created_by" type="text" name="created_by" placeholder="*Created by" required><br>
+            <input id="f0assigned_to" type="text" name="assigned_to" placeholder="(opt)Assigned to"><br>
+            <input id="f0status_text" type="text" name="status_text" placeholder="(opt)Status text"><br>
+            <textarea id="f0issue_text" type="text" name="issue_text" placeholder="*Text" required></textarea><br>
+            <button type="submit">Create a new issue</button>
         </form><br>
-        <h3>Update an issue based on its id</h3>
+        <h3>Update an issue with its id</h3>
         <form id="UpdateIssue" class="border">
-            <input id="f1project_name" type="text" name="project_name" placeholder="*Project" required>
-            <input id="f1id" type="text" name="_id" placeholder="*_id" style="width: 100px" required=><br>
-            <input id="f1issue_title" type="text" name="issue_title" placeholder="(opt)Title" style="width: 100px"><br>
-            <textarea id="f1issue_text" type="text" name="issue_text" placeholder="(opt)Text" style="width: 100px"></textarea><br>
-            <input id="f1created_by" type="text" name="created_by" placeholder="(opt)Created by" style="width: 100px"><br>
-            <input id="f1assigned_to" type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
-            <input id="f1status_text" type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
+            <input id="f1project_name" type="text" name="project_name" placeholder="*Project" required><br>
+            <input id="f1id" type="text" name="_id" placeholder="*_id" required=><br>
+            <input id="f1issue_title" type="text" name="issue_title" placeholder="(opt)Title"><br>   
+            <input id="f1created_by" type="text" name="created_by" placeholder="(opt)Created by"><br>
+            <input id="f1assigned_to" type="text" name="assigned_to" placeholder="(opt)Assigned to"><br>
+            <input id="f1status_text" type="text" name="status_text" placeholder="(opt)Status text"><br>
+            <textarea id="f1issue_text" type="text" name="issue_text" placeholder="(opt)Text"></textarea><br>
             <label><input id="f1close_issue" type="checkbox" name="closeIssue"> Check to close issue</label><br>
-            <button type="submit">Submit Issue</button>
+            <button type="submit">Update Issue</button>
         </form><br>
-        <h3>Delete issue on <i>apitest</i></h3>
+        <h3>Delete an issue</i></h3>
         <form id="deleteIssue" class="border">
-            <input id="f2project_name" type="text" name="project_name" placeholder="*Project" required>
-            <input id="f2id" type="text" name="_id" placeholder="_id" style="width: 100px" required=''><br>
+            <input id="f2project_name" type="text" name="project_name" placeholder="*Project" required><br>
+            <input id="f2id" type="text" name="_id" placeholder="_id" required><br>
             <button type="submit">Delete Issue</button>
         </form>
         <code id='jsonResult'></code>
@@ -54,7 +56,7 @@
 
             //handles the first form : submit new issue
             document.forms[0].addEventListener("submit", function (e) {
-                e.preventDefault();               
+                e.preventDefault();
                 let data = {
                     issue_title: f0issue_title.value,
                     issue_text: f0issue_text.value,
@@ -66,7 +68,7 @@
                 let query = "api/issues/" + project;
                 let req = new XMLHttpRequest();
                 req.open("POST", query, true);
-                req.setRequestHeader('Content-Type','application/json');
+                req.setRequestHeader('Content-Type', 'application/json');
                 req.send(JSON.stringify(data));
                 req.onload = function () {
                     let json = JSON.parse(req.responseText);
@@ -77,7 +79,7 @@
 
             //handles the seconde form : update an issue
             document.forms[1].addEventListener("submit", function (e) {
-                e.preventDefault();               
+                e.preventDefault();
                 let data = {
                     id: f1id.value,
                     issue_title: f1issue_title.value,
@@ -91,7 +93,7 @@
                 let query = "api/issues/" + project;
                 let req = new XMLHttpRequest();
                 req.open("PUT", query, true);
-                req.setRequestHeader('Content-Type','application/json');
+                req.setRequestHeader('Content-Type', 'application/json');
                 req.send(JSON.stringify(data));
                 req.onload = function () {
                     let json = JSON.parse(req.responseText);
@@ -102,13 +104,13 @@
 
             //handles the third form : delete an issue
             document.forms[2].addEventListener("submit", function (e) {
-                e.preventDefault();               
+                e.preventDefault();
                 let data = { id: f2id.value };
                 let project = f2project_name.value;
                 let query = "api/issues/" + project;
                 let req = new XMLHttpRequest();
                 req.open("DELETE", query, true);
-                req.setRequestHeader('Content-Type','application/json');
+                req.setRequestHeader('Content-Type', 'application/json');
                 req.send(JSON.stringify(data));
                 req.onload = function () {
                     let json = JSON.parse(req.responseText);

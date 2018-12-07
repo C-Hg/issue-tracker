@@ -10,17 +10,31 @@ exports.submit_issue = async function(req, res) {
     }
 
     //verify that project exists, else creates it
-    let project = await read_functions.retrieve_project_by_name(req.params.project);
+    let project = "";
+    try {
+        project = await read_functions.retrieve_project_by_name(req.params.project);
+    } catch (e) {
+        console.log("error while retrieving project in function submit_issue");
+    }
     
     //mongoose Model.find returns an array of objects, void if no match, whereas Model.create returns an object
     //luckily Model.findOne return undefined if no match!
     if(!project){
-       project = await create_functions.create_project(req.params.project);
+        try {
+            project = await create_functions.create_project(req.params.project);
+        } catch (e) {
+            console.log("error while creating project in function submit_issue");
+        }  
     }
 
-    //creates the new issue, associated to the project with id of the project 
+    //creates the new issue, associated to the project with its id
     // without verifying if name already exists
-    let issue = await create_functions.create_issue(project._id, req.body);
+    let issue = "";
+    try {
+        issue = await create_functions.create_issue(project._id, req.body);
+    } catch (e) {
+        console.log("error while creating issue in function submit_issue");
+    }   
 
     //return the issue informations after cleaning;
     let response = issue.toObject();

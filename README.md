@@ -9,3 +9,9 @@ User stories
 * I can GET /api/issues/{projectname} for an array of all issues on that specific project with all the information for each issue as was returned when posted.
 * I can filter my get request by also passing along any field and value in the query(ie. /api/issues/{project}?open=false). I can pass along as many fields/values as I want.
 * All tests are complete and passing.
+
+## To launch the app locally
+* Clone the repository 
+* Install mongodb and start it (<code>sudo service mongod start</code>).
+* From the project repository, run <code>npm start</code> and go to http://localhost:3000.
+* Run tests with <code>npm test</code> (mocha must be installed globally).
