@@ -75,7 +75,7 @@ suite('Issue update on "Apitest" project', function () {
                 })
         })
     })
-    suite('Rejection when wrong or no data is provided.', function () {
+    suite('Rejection when wrong or no data is provided', function () {
         test('the project does not exist', function (done) {
             chai.request('http://localhost:3000')
                 .put('/api/issues/FarTooLongAndMeaninglessName')

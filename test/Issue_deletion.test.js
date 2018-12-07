@@ -19,6 +19,7 @@ suite('Issue deletion on "Apitest" project', function () {
             .end(function (err, res) {
                 let response = JSON.parse(res.text);
                 validId = response._id;
+
             });
     })
 
@@ -33,7 +34,7 @@ suite('Issue deletion on "Apitest" project', function () {
                 })
                 .end(function (err, res) {
                     let response = JSON.parse(res.text);
-                    assert.propertyVal(response, 'string', 'Issue successfully deleted.', "should respond that the issue has been deleted");
+                    assert.propertyVal(response, 'result', 'Issue successfully deleted.', "should respond that the issue has been deleted");
                     done();
                 });
         })
@@ -52,7 +53,7 @@ suite('Issue deletion on "Apitest" project', function () {
                 })
         })
     })
-    suite('Rejection when wrong or no data is provided.', function () {
+    suite('Rejection when wrong or no data is provided', function () {
         test('the project does not exist', function (done) {
             chai.request('http://localhost:3000')
                 .delete('/api/issues/FarTooLongAndMeaninglessName')
