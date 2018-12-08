@@ -27,7 +27,7 @@ exports.retrieve_issues = async function (req, res) {
         //the conversion to proper objects and not mongodb documents allows testing
         let arrayOfIssues = convertIssues(issues);
         res.json({
-            string: `There is currently ${issues.length} issues for this project, see below for details.`,
+            string: `There are currently ${issues.length} issues for this project, see below for details.`,
             issues: arrayOfIssues
         });
         return;

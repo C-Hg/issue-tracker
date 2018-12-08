@@ -4,20 +4,27 @@ body {
 }
 
 h1 { 
-    margin-top: 50px;
+    margin-top: 30px;
+    margin-bottom: 0px;
     color: #242323;
-    font-size: 42px;
+    font-size: 48px;
     font-weight: bold;
 }
 
 h2 {
-    font-size: 26px;
+    font-size: 34px;
+    margin-top: 10px;
     color: #242323;
 }
 
+h3 {
+    margin-top: 0px;
+}
+
 #result {
-    display: inline;
-    width: 50%;
+    display: block;
+    height: 40px;
+    width: 100%;
     margin: auto;
     font-family: 'M PLUS Rounded 1c', sans-serif;
     font-size: 28px;
@@ -25,8 +32,40 @@ h2 {
     color: #615F5E;
 }
 
+.inputField {
+    width: 220px;
+    margin-bottom: 2.5px;
+}
+
+#forms {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
 .border {
-    display: block;
-    margin: auto;
     border: 1px solid black;
+    border-radius: 5px;
+    height: 340px;
+    width: 280px;
+    font-size: 18px;
+    margin: 30px 15px 0 15px;
+    padding: 15px;
+}
+
+#lastBorder {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+#jsonResult {
+    margin-top: 40px;
+}
+
+.deleteIssue {
+    margin-bottom: 20px;
 }

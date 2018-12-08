@@ -22,7 +22,7 @@ suite('Issue retrieval on "Apitest" project', function () {
                 .get('/api/issues/Apitest')
                 .end(function (err, res) {
                     let response = JSON.parse(res.text);
-                    assert.include(response.string, 'There is currently ');
+                    assert.include(response.string, 'There are currently ');
                     assert.isArray(response.issues);
                     assert.property(response.issues[0], "title");
                     assert.property(response.issues[0], "text");
@@ -59,7 +59,7 @@ suite('Issue retrieval on "Apitest" project', function () {
                 .end(function (err, res) {
                     let response = JSON.parse(res.text);
                     assert.isString(res.text, "the response should be a string");
-                    assert.include(response.string, "There is currently 1 issues for this project");
+                    assert.include(response.string, "There are currently 1 issues for this project");
                     assert.isArray(response.issues);
                     assert.property(response.issues[0], "title");
                     assert.property(response.issues[0], "text");
